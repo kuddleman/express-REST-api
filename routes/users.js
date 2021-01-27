@@ -1,49 +1,19 @@
 import express from 'express'
-import { v4 as uuidv4 } from 'uuid'
-import { createUser } from '../controllers/users.js'
+import { createUser, getUsers, getUser, deleteUser, updateUser } from '../controllers/users.js'
 
 const router = express.Router()
 
-let users = []
 
 
-router.get('/',(req, res)=>{
-    
-    res.send(users)
-})
+
+router.get('/', getUsers)
 
 router.post('/', createUser )
-    //console.log(`POST ROUTE REACHED`)
 
-    
+router.get('/:id', getUser)
 
+router.delete('/:id', deleteUser )
 
-router.get('/:id', (req, res)=>{
-    const {id} = req.params
-
-    const foundUser = users.find( user => user.id === id )
-    res.send(foundUser)
-})
-
-router.delete('/:id', (req, res)=>{
-    const { id } = req.params
-
-    users = users.filter( user => user.id !== id )
-    res.send(`User with id ${id} has been deleted from the database.`)
-})
-
-router.patch('/:id', (req, res)=>{
-    const { id } = req.params
-    const { firstName, lastName, age } = req.body
-
-    const user = users.find(user => user.id === id)
-   
-    if(firstName) user.firstName = firstName
-    if(lastName)  user.lastName = lastName
-    if(age)  user.age = age
-       
-    res.send(`User with the id of ${id} has been updated`)
-    
-})
+router.patch('/:id', updateUser)
 
 export default router
